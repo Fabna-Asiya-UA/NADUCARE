@@ -1,0 +1,163 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Browse Problems | NaaduCare{% endblock %}
+
+{% block content %}
+<section class="np-page">
+
+    <!-- Page heading -->
+    <div class="np-page-header">
+        <div>
+            <span class="np-eyebrow">YOUR COMMUNITY, YOUR VOICE</span>
+            <h1>Explore Community Problems</h1>
+            <p>Discover local issues, share solutions, and follow progress in your district.</p>
+        </div>
+
+        <a href="{% url 'problem_list' %}" class="np-reset-link">
+            <span>↻</span> View all problems
+        </a>
+    </div>
+
+    <!-- Search and filters -->
+    <form method="get" class="np-filter-panel">
+        <div class="np-filter-heading">
+            <div class="np-filter-icon">⌕</div>
+            <div>
+                <h2>Find a local issue</h2>
+                <p>Filter reports by keyword, district, or category.</p>
+            </div>
+        </div>
+
+        <div class="np-filter-grid">
+            <div class="np-field np-search-field">
+                <label for="search">Search problems</label>
+                <div class="np-input-wrap">
+                    <span class="np-input-icon">⌕</span>
+                    <input
+                        id="search"
+                        type="text"
+                        name="search"
+                        value="{{ search|default:'' }}"
+                        placeholder="Title, description or location"
+                    >
+                </div>
+            </div>
+
+            <div class="np-field">
+                <label for="district">District</label>
+                <select id="district" name="district">
+                    <option value="">All districts</option>
+                    {% for value, label in districts %}
+                        <option value="{{ value }}"
+                            {% if selected_district == value %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="np-field">
+                <label for="category">Category</label>
+                <select id="category" name="category">
+                    <option value="">All categories</option>
+                    {% for value, label in categories %}
+                        <option value="{{ value }}"
+                            {% if selected_category == value %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="np-filter-actions">
+                <button type="submit" class="np-search-button">
+                    Search <span>→</span>
+                </button>
+                <a href="{% url 'problem_list' %}" class="np-clear-button">
+                    Clear filters
+                </a>
+            </div>
+        </div>
+    </form>
+
+    <!-- Results heading -->
+    <div class="np-results-header">
+        <div>
+            <span class="np-section-label">COMMUNITY REPORTS</span>
+            <h2>Reported Issues</h2>
+        </div>
+        <span class="np-results-note">Explore reports from your community</span>
+    </div>
+
+    <!-- Problem cards -->
+    <div class="np-problem-grid">
+        {% for problem in problems %}
+            <article class="np-problem-card">
+
+                <div class="np-card-visual">
+                    {% if problem.photo %}
+                        <img
+                            src="{{ problem.photo.url }}"
+                            class="np-problem-image"
+                            alt="{{ problem.title }}"
+                        >
+                    {% else %}
+                        <div class="np-image-placeholder">
+                            <span class="np-placeholder-symbol">⌖</span>
+                            <span>Community Report</span>
+                        </div>
+                    {% endif %}
+
+                    <span class="np-category-badge">
+                        {{ problem.get_category_display|default:problem.category }}
+                    </span>
+                </div>
+
+                <div class="np-card-content">
+                    <div class="np-card-location">
+                        <span>⌖</span>
+                        {{ problem.district }}{% if problem.location %}, {{ problem.location }}{% endif %}
+                    </div>
+
+                    <h3>{{ problem.title }}</h3>
+
+                    <p class="np-problem-description">
+                        {{ problem.description|truncatewords:22 }}
+                    </p>
+
+                    <div class="np-card-footer">
+                        <span class="np-status
+                            {% if problem.status == 'Resolved' or problem.status == 'resolved' %}
+                                np-status-resolved
+                            {% elif problem.status == 'In Progress' or problem.status == 'in_progress' %}
+                                np-status-progress
+                            {% else %}
+                                np-status-reported
+                            {% endif %}">
+                            <span class="np-status-dot"></span>
+                            {{ problem.get_status_display|default:problem.status }}
+                        </span>
+
+                        <a href="{% url 'problem_detail' problem.pk %}"
+                           class="np-view-link">
+                            View details <span>↗</span>
+                        </a>
+                    </div>
+                </div>
+            </article>
+
+        {% empty %}
+            <div class="np-empty-state">
+                <div class="np-empty-icon">⌕</div>
+                <h3>No matching problems found</h3>
+                <p>Try a different keyword or change your district and category filters.</p>
+                <a href="{% url 'problem_list' %}" class="np-search-button">
+                    View all problems <span>→</span>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+
+</section>
+{% endblock %}

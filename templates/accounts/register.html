@@ -1,0 +1,79 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Create Account | NaaduCare{% endblock %}
+
+{% block content %}
+<section class="register-section">
+    <div class="register-container">
+
+        <div class="register-card">
+
+            <div class="register-icon">
+                <span>🌿</span>
+            </div>
+
+            <div class="register-heading">
+                <p class="register-eyebrow">JOIN YOUR COMMUNITY</p>
+                <h1>Create your account</h1>
+                <p>
+                    Be part of the change. Help make your community
+                    cleaner, safer, and better for everyone.
+                </p>
+            </div>
+
+            <form method="post" class="register-form">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="register-errors">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                {% for field in form %}
+                    <div class="register-field">
+                        <label for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                        </label>
+
+                        {{ field }}
+
+                        {% if field.help_text %}
+                            <small class="field-help">
+                                {{ field.help_text|safe }}
+                            </small>
+                        {% endif %}
+
+                        {% for error in field.errors %}
+                            <small class="field-error">{{ error }}</small>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                <button type="submit" class="register-submit">
+                    Create Account
+                    <span>→</span>
+                </button>
+            </form>
+
+            <div class="register-login">
+                Already have an account?
+                <a href="{% url 'login' %}">Log in</a>
+            </div>
+
+            <div class="register-note">
+                <span>🤝</span>
+                <span>Together, we can build a better neighbourhood.</span>
+            </div>
+
+        </div>
+
+        <div class="register-side-note">
+            <span class="side-note-dot"></span>
+            Every small action makes a difference.
+        </div>
+
+    </div>
+</section>
+{% endblock %}

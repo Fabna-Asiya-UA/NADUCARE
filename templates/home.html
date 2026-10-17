@@ -1,0 +1,709 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Home | NaaduCare{% endblock %}
+
+{% block content %}
+
+<style>
+/* ===== NaaduCare Green, White & Black Theme ===== */
+
+.nc-home {
+    --green: #176b43;
+    --green-dark: #104b30;
+    --green-light: #eef6f0;
+    --black: #111b15;
+    --muted: #657168;
+    --border: #e1e8e2;
+    --white: #ffffff;
+
+    background: var(--white);
+    color: var(--black);
+    font-family: inherit;
+}
+
+.nc-home * {
+    box-sizing: border-box;
+}
+
+.nc-container {
+    width: min(1120px, 92%);
+    margin: auto;
+}
+
+/* Navigation label */
+
+.nc-home-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.nc-home-logo {
+    width: 43px;
+    height: 43px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: var(--green);
+    color: white;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.nc-home-brand {
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: -0.7px;
+    margin: 0;
+}
+
+.nc-home-tagline {
+    color: var(--muted);
+    font-size: 12px;
+    margin: 2px 0 0;
+}
+
+.nc-home-label a {
+    margin-left: auto;
+    text-decoration: none;
+}
+
+/* Buttons */
+
+.nc-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 13px 19px;
+    border-radius: 9px;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    transition: background .2s, transform .2s;
+}
+
+.nc-btn:hover {
+    transform: translateY(-2px);
+}
+
+.nc-btn-green {
+    background: var(--green);
+    color: white;
+    border: 1px solid var(--green);
+}
+
+.nc-btn-green:hover {
+    background: var(--green-dark);
+    color: white;
+}
+
+.nc-btn-outline {
+    background: white;
+    color: var(--black);
+    border: 1px solid #cbd8ce;
+}
+
+.nc-btn-outline:hover {
+    background: var(--green-light);
+    color: var(--green-dark);
+}
+
+/* Hero */
+
+.nc-hero {
+    display: grid;
+    grid-template-columns: 1.2fr .8fr;
+    gap: 55px;
+    align-items: center;
+    padding: 85px 0 75px;
+}
+
+.nc-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 12px;
+    border-radius: 30px;
+    background: var(--green-light);
+    color: var(--green-dark);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.1px;
+}
+
+.nc-eyebrow::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+}
+
+.nc-hero h1 {
+    margin: 23px 0 18px;
+    max-width: 650px;
+    font-size: clamp(42px, 6vw, 70px);
+    line-height: 1.05;
+    font-weight: 850;
+    letter-spacing: -3px;
+}
+
+.nc-hero h1 span {
+    color: var(--green);
+}
+
+.nc-hero-description {
+    max-width: 510px;
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.9;
+}
+
+.nc-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+}
+
+/* Right hero panel */
+
+.nc-hero-panel {
+    position: relative;
+    padding: 30px;
+    background: var(--green);
+    border-radius: 20px;
+    color: white;
+    overflow: hidden;
+    min-height: 310px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.nc-hero-panel::after {
+    content: "";
+    position: absolute;
+    width: 190px;
+    height: 190px;
+    right: -60px;
+    top: -60px;
+    border: 35px solid rgba(255,255,255,.09);
+    border-radius: 50%;
+}
+
+.nc-panel-icon {
+    width: 58px;
+    height: 58px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(255,255,255,.35);
+    border-radius: 16px;
+    font-size: 28px;
+}
+
+.nc-hero-panel h2 {
+    position: relative;
+    z-index: 1;
+    font-size: 28px;
+    line-height: 1.25;
+    font-weight: 800;
+    margin: 35px 0 10px;
+}
+
+.nc-hero-panel p {
+    color: #e0eee5;
+    line-height: 1.8;
+    margin-bottom: 0;
+}
+
+/* Statistics */
+
+.nc-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    padding: 25px 0 70px;
+}
+
+.nc-stat {
+    padding: 25px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: white;
+}
+
+.nc-stat-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.nc-stat-label {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.nc-stat-icon {
+    display: grid;
+    place-items: center;
+    width: 39px;
+    height: 39px;
+    border-radius: 11px;
+    background: var(--green-light);
+    color: var(--green);
+    font-size: 19px;
+}
+
+.nc-stat-number {
+    display: block;
+    margin-top: 17px;
+    font-size: 38px;
+    font-weight: 850;
+    letter-spacing: -1.5px;
+}
+
+/* Reports */
+
+.nc-reports {
+    padding: 65px 0 75px;
+    background: #f7faf7;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+
+.nc-section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 20px;
+    margin-bottom: 28px;
+}
+
+.nc-section-heading h2 {
+    font-size: clamp(28px, 4vw, 38px);
+    font-weight: 850;
+    letter-spacing: -1.3px;
+    margin: 10px 0;
+}
+
+.nc-section-heading p {
+    color: var(--muted);
+    margin: 0;
+    line-height: 1.7;
+}
+
+.nc-report-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.nc-report-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    padding: 23px;
+    transition: transform .2s, box-shadow .2s;
+}
+
+.nc-report-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(17, 50, 28, .07);
+}
+
+.nc-report-status {
+    display: inline-block;
+    padding: 7px 10px;
+    border-radius: 20px;
+    background: var(--green-light);
+    color: var(--green-dark);
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.nc-report-card h3 {
+    font-size: 19px;
+    line-height: 1.4;
+    margin: 18px 0 10px;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+.nc-report-description {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+}
+
+.nc-report-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    padding-top: 16px;
+    margin-top: 18px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.nc-report-link {
+    display: inline-block;
+    margin-top: 19px;
+    color: var(--green);
+    font-size: 14px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.nc-report-link:hover {
+    color: var(--green-dark);
+}
+
+/* Empty state */
+
+.nc-empty {
+    padding: 45px 20px;
+    border: 1px dashed #bdcfc1;
+    border-radius: 15px;
+    text-align: center;
+    background: white;
+}
+
+.nc-empty h3 {
+    font-weight: 800;
+}
+
+.nc-empty p {
+    color: var(--muted);
+}
+
+/* Bottom call to action */
+
+.nc-cta {
+    padding: 65px 0;
+}
+
+.nc-cta-inner {
+    padding: 42px;
+    border-radius: 18px;
+    background: var(--black);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+}
+
+.nc-cta h2 {
+    font-size: clamp(26px, 4vw, 36px);
+    font-weight: 850;
+    letter-spacing: -1px;
+    margin: 0 0 12px;
+}
+
+.nc-cta p {
+    max-width: 550px;
+    color: #c6d1c9;
+    line-height: 1.8;
+    margin: 0;
+}
+
+/* Responsive layout */
+
+@media (max-width: 850px) {
+    .nc-hero {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 55px 0;
+    }
+
+    .nc-hero-panel {
+        min-height: 260px;
+    }
+
+    .nc-report-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .nc-cta-inner {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 600px) {
+    .nc-home-label {
+        gap: 9px;
+    }
+
+    .nc-home-brand {
+        font-size: 18px;
+    }
+
+    .nc-home-tagline {
+        font-size: 10px;
+    }
+
+    .nc-home-label .nc-btn {
+        padding: 10px;
+        font-size: 12px;
+    }
+
+    .nc-hero h1 {
+        letter-spacing: -1.8px;
+    }
+
+    .nc-hero-description {
+        font-size: 15px;
+    }
+
+    .nc-hero-actions .nc-btn {
+        width: 100%;
+    }
+
+    .nc-stats {
+        grid-template-columns: 1fr;
+        padding-bottom: 45px;
+    }
+
+    .nc-stat {
+        padding: 20px;
+    }
+
+    .nc-report-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .nc-section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .nc-cta-inner {
+        padding: 27px;
+    }
+
+    .nc-cta-inner .nc-btn {
+        width: 100%;
+    }
+}
+</style>
+
+<main class="nc-home">
+
+    <div class="nc-container">
+
+        <!-- Brand strip -->
+        <div class="nc-home-label">
+            <div class="nc-home-logo">N</div>
+
+            <div>
+                <h2 class="nc-home-brand">NaaduCare</h2>
+                <p class="nc-home-tagline">
+                    Better neighbourhoods. Together.
+                </p>
+            </div>
+
+            <a href="{% url 'create_problem' %}" class="nc-btn nc-btn-green">
+                + Report Issue
+            </a>
+        </div>
+
+        <!-- Hero section -->
+        <section class="nc-hero">
+
+            <div>
+                <div class="nc-eyebrow">
+                    YOUR COMMUNITY, YOUR VOICE
+                </div>
+
+                <h1>
+                    Small actions.<br>
+                    <span>Big changes.</span>
+                </h1>
+
+                <p class="nc-hero-description">
+                    Help make Kerala cleaner, safer, and better.
+                    Report local problems, follow their progress,
+                    and be part of positive change in your community.
+                </p>
+
+                <div class="nc-hero-actions">
+                    <a href="{% url 'create_problem' %}"
+                       class="nc-btn nc-btn-green">
+                        Report a problem <span>↗</span>
+                    </a>
+
+                    <a href="{% url 'problem_list' %}"
+                       class="nc-btn nc-btn-outline">
+                        Explore reports <span>→</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="nc-hero-panel">
+                <div class="nc-panel-icon">⌖</div>
+
+                <div>
+                    <h2>
+                        Your area.<br>
+                        Your responsibility.
+                    </h2>
+
+                    <p>
+                        Every report is a step towards a better
+                        neighbourhood. Speak up about local issues
+                        and help your community move forward.
+                    </p>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Statistics -->
+        <section class="nc-stats">
+
+            <div class="nc-stat">
+                <div class="nc-stat-top">
+                    <span class="nc-stat-label">Total reports</span>
+                    <span class="nc-stat-icon">▤</span>
+                </div>
+
+                <span class="nc-stat-number">
+                    {{ total_problems|default:0 }}
+                </span>
+            </div>
+
+            <div class="nc-stat">
+                <div class="nc-stat-top">
+                    <span class="nc-stat-label">Issues resolved</span>
+                    <span class="nc-stat-icon">✓</span>
+                </div>
+
+                <span class="nc-stat-number">
+                    {{ resolved_problems|default:0 }}
+                </span>
+            </div>
+
+            <div class="nc-stat">
+                <div class="nc-stat-top">
+                    <span class="nc-stat-label">In progress</span>
+                    <span class="nc-stat-icon">↗</span>
+                </div>
+
+                <span class="nc-stat-number">
+                    {{ in_progress_problems|default:0 }}
+                </span>
+            </div>
+
+        </section>
+
+    </div>
+
+    <!-- Latest reports -->
+    <section class="nc-reports">
+        <div class="nc-container">
+
+            <div class="nc-section-heading">
+                <div>
+                    <div class="nc-eyebrow">COMMUNITY UPDATES</div>
+                    <h2>Recently reported issues</h2>
+                    <p>
+                        See what people in the community are reporting.
+                    </p>
+                </div>
+
+                <a href="{% url 'problem_list' %}"
+                   class="nc-btn nc-btn-outline">
+                    View all reports →
+                </a>
+            </div>
+
+            <div class="nc-report-grid">
+
+                {% for problem in latest_problems %}
+
+                    <article class="nc-report-card">
+
+                        <span class="nc-report-status">
+                            {{ problem.status|default:"Reported" }}
+                        </span>
+
+                        <h3>{{ problem.title }}</h3>
+
+                        <p class="nc-report-description">
+                            {{ problem.description|truncatewords:20 }}
+                        </p>
+
+                        <div class="nc-report-meta">
+                            <span>
+                                📍
+                                {{ problem.district|default:problem.location|default:"Kerala" }}
+                            </span>
+
+                            <span>
+                                {{ problem.created_at|date:"d M Y" }}
+                            </span>
+                        </div>
+
+                        <a href="{% url 'problem_detail' problem.pk %}"
+                           class="nc-report-link">
+                            View report →
+                        </a>
+
+                    </article>
+
+                {% empty %}
+
+                    <div class="nc-empty">
+                        <h3>No reports yet</h3>
+                        <p>
+                            Be the first to report an issue in your community.
+                        </p>
+
+                        <a href="{% url 'create_problem' %}"
+                           class="nc-btn nc-btn-green">
+                            Submit the first report
+                        </a>
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Bottom call to action -->
+    <section class="nc-cta">
+        <div class="nc-container">
+            <div class="nc-cta-inner">
+
+                <div>
+                    <h2>Let's improve our neighbourhood.</h2>
+                    <p>
+                        Notice a road problem, waste issue, drainage
+                        concern, or another local problem? Report it
+                        and help bring attention to the issue.
+                    </p>
+                </div>
+
+                <a href="{% url 'create_problem' %}"
+                   class="nc-btn nc-btn-green">
+                    Report an issue ↗
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+</main>
+
+{% endblock %}

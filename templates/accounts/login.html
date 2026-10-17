@@ -1,0 +1,95 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Login | NaaduCare{% endblock %}
+
+{% block content %}
+<section class="login-section">
+    <div class="login-container">
+
+        <div class="login-card">
+
+            <div class="login-icon">
+                <span>🌿</span>
+            </div>
+
+            <div class="login-heading">
+                <p class="login-eyebrow">WELCOME TO NAADUCARE</p>
+                <h1>Welcome back!</h1>
+                <p>
+                    Sign in to follow community issues and help
+                    make your neighbourhood a better place.
+                </p>
+            </div>
+
+            {% if form.errors %}
+                <div class="login-error">
+                    <span>⚠</span>
+                    <div>
+                        <strong>Login unsuccessful</strong>
+                        <p>Invalid username or password. Please try again.</p>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="login-message">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post" class="login-form">
+                {% csrf_token %}
+
+                {% for field in form %}
+                    <div class="login-field">
+                        <label for="{{ field.id_for_label }}">
+                            {% if field.name == 'username' %}
+                                Username
+                            {% elif field.name == 'password' %}
+                                Password
+                            {% else %}
+                                {{ field.label }}
+                            {% endif %}
+                        </label>
+
+                        {{ field }}
+
+                        {% for error in field.errors %}
+                            <small class="login-field-error">
+                                {{ error }}
+                            </small>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                <input type="hidden" name="next" value="{{ next }}">
+
+                <button type="submit" class="login-submit">
+                    <span>Login to Your Account</span>
+                    <span class="login-arrow">→</span>
+                </button>
+            </form>
+
+            <div class="login-register">
+                <span>New to NaaduCare?</span>
+                <a href="{% url 'register' %}">Create an account</a>
+            </div>
+
+            <div class="login-note">
+                <span>🤝</span>
+                <span>Your community. Your voice. Your impact.</span>
+            </div>
+
+        </div>
+
+        <div class="login-bottom-note">
+            <span class="login-status-dot"></span>
+            Together, let's make our neighbourhood better.
+        </div>
+
+    </div>
+</section>
+{% endblock %}

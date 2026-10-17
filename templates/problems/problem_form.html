@@ -1,0 +1,837 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Report a Problem | NaaduCare{% endblock %}
+
+{% block content %}
+<div class="nc-report-page">
+
+    <!-- Hero Section -->
+    <section class="nc-report-hero">
+        <div class="nc-report-hero-content">
+            <span class="nc-eyebrow">
+                <span class="nc-status-dot"></span>
+                COMMUNITY ACTION STARTS HERE
+            </span>
+
+            <h1>Make your community <span>better.</span></h1>
+
+            <p>
+                Every reported problem is a step towards a better neighbourhood.
+                Tell us what's happening, and help us make a difference together.
+            </p>
+
+            <div class="nc-report-benefits">
+                <span><i class="bi bi-check-circle-fill"></i> Easy reporting</span>
+                <span><i class="bi bi-check-circle-fill"></i> Community visibility</span>
+                <span><i class="bi bi-check-circle-fill"></i> Track progress</span>
+            </div>
+        </div>
+
+        <div class="nc-hero-decoration" aria-hidden="true">
+            <div class="nc-decoration-circle nc-circle-one"></div>
+            <div class="nc-decoration-circle nc-circle-two"></div>
+            <div class="nc-hero-icon">
+                <i class="bi bi-megaphone-fill"></i>
+            </div>
+            <div class="nc-floating-card">
+                <i class="bi bi-geo-alt-fill"></i>
+                <div>
+                    <strong>Your voice matters</strong>
+                    <small>Start a positive change</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="nc-report-layout">
+
+        <!-- Report Form -->
+        <div class="nc-form-card">
+
+            <div class="nc-form-heading">
+                <div class="nc-form-heading-icon">
+                    <i class="bi bi-file-earmark-plus"></i>
+                </div>
+                <div>
+                    <span class="nc-section-label">NEW SUBMISSION</span>
+                    <h2>Report a local problem</h2>
+                    <p>Share the details below so the right people can understand the issue.</p>
+                </div>
+            </div>
+
+            <div class="nc-form-divider"></div>
+
+            {% if form.errors %}
+                <div class="nc-form-alert" role="alert">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    <div>
+                        <strong>Please check your information.</strong>
+                        <p>Some fields need your attention before you can submit this report.</p>
+                    </div>
+                </div>
+            {% endif %}
+
+            <form method="post" enctype="multipart/form-data" class="nc-report-form">
+                {% csrf_token %}
+
+                {% for field in form %}
+                    <div class="nc-field-group {% if field.errors %}nc-field-error{% endif %}">
+                        <label for="{{ field.id_for_label }}" class="nc-field-label">
+                            {{ field.label }}
+                            {% if field.field.required %}
+                                <span class="nc-required">*</span>
+                            {% endif %}
+                        </label>
+
+                        {% if field.help_text %}
+                            <div class="nc-field-help">{{ field.help_text|safe }}</div>
+                        {% endif %}
+
+                        {{ field }}
+
+                        {% if field.errors %}
+                            <div class="nc-field-error-message">
+                                <i class="bi bi-exclamation-circle"></i>
+                                {{ field.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <div class="nc-privacy-note">
+                    <i class="bi bi-shield-check"></i>
+                    <p>
+                        <strong>Before you submit</strong>
+                        Please make sure your information is accurate and avoid
+                        including sensitive personal information.
+                    </p>
+                </div>
+
+                <div class="nc-form-actions">
+                    <a href="{% url 'problem_list' %}" class="nc-cancel-btn">
+                        <i class="bi bi-arrow-left"></i>
+                        Cancel
+                    </a>
+
+                    <button type="submit" class="nc-submit-btn">
+                        Submit Report
+                        <i class="bi bi-arrow-up-right"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Information Sidebar -->
+        <aside class="nc-report-sidebar">
+
+            <div class="nc-sidebar-card nc-guidelines-card">
+                <div class="nc-sidebar-icon">
+                    <i class="bi bi-lightbulb"></i>
+                </div>
+
+                <h3>Tips for a useful report</h3>
+                <p class="nc-sidebar-description">
+                    A clear report helps your community understand the problem.
+                </p>
+
+                <div class="nc-guideline">
+                    <span class="nc-guideline-number">01</span>
+                    <div>
+                        <strong>Be specific</strong>
+                        <p>Describe exactly what the problem is.</p>
+                    </div>
+                </div>
+
+                <div class="nc-guideline">
+                    <span class="nc-guideline-number">02</span>
+                    <div>
+                        <strong>Add the location</strong>
+                        <p>Help people identify where the issue exists.</p>
+                    </div>
+                </div>
+
+                <div class="nc-guideline">
+                    <span class="nc-guideline-number">03</span>
+                    <div>
+                        <strong>Include evidence</strong>
+                        <p>If your form supports image uploads, add a relevant photo.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nc-sidebar-card nc-community-card">
+                <div class="nc-community-icon">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <h3>Small reports. Big changes.</h3>
+                <p>
+                    Your contribution can help bring attention to local issues
+                    and encourage community action.
+                </p>
+                <a href="{% url 'problem_list' %}" class="nc-community-link">
+                    Explore community reports
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+
+        </aside>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* =====================================
+   NaaduCare Report Page
+===================================== */
+
+.nc-report-page {
+    --nc-green: #16834a;
+    --nc-green-dark: #10663a;
+    --nc-green-light: #eaf7ef;
+    --nc-ink: #17231c;
+    --nc-muted: #718078;
+    --nc-border: #e4ebe6;
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 34px 24px 75px;
+    color: var(--nc-ink);
+}
+
+/* Hero */
+
+.nc-report-hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    min-height: 300px;
+    overflow: hidden;
+    padding: 46px 52px;
+    margin-bottom: 32px;
+    border-radius: 25px;
+    background: linear-gradient(115deg, #102d20 0%, #175e39 58%, #19824a 100%);
+    color: #fff;
+    isolation: isolate;
+}
+
+.nc-report-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 690px;
+}
+
+.nc-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 19px;
+    color: #c9f5d7;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.7px;
+}
+
+.nc-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #83e6a3;
+    box-shadow: 0 0 0 5px rgb(131 230 163 / 14%);
+}
+
+.nc-report-hero h1 {
+    max-width: 620px;
+    margin: 0 0 15px;
+    color: #fff;
+    font-size: clamp(32px, 4vw, 49px);
+    font-weight: 800;
+    line-height: 1.13;
+    letter-spacing: -1.8px;
+}
+
+.nc-report-hero h1 span {
+    color: #91e5ac;
+}
+
+.nc-report-hero-content > p {
+    max-width: 570px;
+    margin-bottom: 23px;
+    color: #d5e8dc;
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+.nc-report-benefits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+}
+
+.nc-report-benefits span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #f0fff4;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.nc-report-benefits i {
+    color: #91e5ac;
+}
+
+/* Hero decoration */
+
+.nc-hero-decoration {
+    position: relative;
+    display: flex;
+    flex: 0 0 225px;
+    align-items: center;
+    justify-content: center;
+    height: 210px;
+}
+
+.nc-decoration-circle {
+    position: absolute;
+    border: 1px solid rgb(255 255 255 / 15%);
+    border-radius: 50%;
+}
+
+.nc-circle-one {
+    width: 195px;
+    height: 195px;
+}
+
+.nc-circle-two {
+    width: 145px;
+    height: 145px;
+}
+
+.nc-hero-icon {
+    z-index: 1;
+    display: grid;
+    width: 105px;
+    height: 105px;
+    place-items: center;
+    border: 1px solid rgb(255 255 255 / 25%);
+    border-radius: 30px;
+    background: rgb(255 255 255 / 12%);
+    color: #c5f7d3;
+    font-size: 48px;
+    transform: rotate(-7deg);
+    backdrop-filter: blur(8px);
+}
+
+.nc-floating-card {
+    position: absolute;
+    right: -12px;
+    bottom: 4px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 13px 15px;
+    border: 1px solid rgb(255 255 255 / 60%);
+    border-radius: 13px;
+    background: #fff;
+    color: var(--nc-ink);
+    box-shadow: 0 12px 35px rgb(0 0 0 / 14%);
+}
+
+.nc-floating-card > i {
+    display: grid;
+    width: 36px;
+    height: 36px;
+    place-items: center;
+    border-radius: 10px;
+    background: var(--nc-green-light);
+    color: var(--nc-green);
+    font-size: 18px;
+}
+
+.nc-floating-card strong,
+.nc-floating-card small {
+    display: block;
+    white-space: nowrap;
+}
+
+.nc-floating-card strong {
+    font-size: 12px;
+}
+
+.nc-floating-card small {
+    margin-top: 3px;
+    color: var(--nc-muted);
+    font-size: 10px;
+}
+
+/* Main layout */
+
+.nc-report-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 325px;
+    align-items: start;
+    gap: 26px;
+}
+
+.nc-form-card,
+.nc-sidebar-card {
+    border: 1px solid var(--nc-border);
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0 8px 32px rgb(20 50 30 / 5%);
+}
+
+.nc-form-card {
+    padding: 34px;
+}
+
+.nc-form-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 17px;
+}
+
+.nc-form-heading-icon {
+    display: grid;
+    flex: 0 0 53px;
+    width: 53px;
+    height: 53px;
+    place-items: center;
+    border-radius: 15px;
+    background: var(--nc-green-light);
+    color: var(--nc-green);
+    font-size: 25px;
+}
+
+.nc-section-label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--nc-green);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.nc-form-heading h2 {
+    margin: 0 0 7px;
+    color: var(--nc-ink);
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -.6px;
+}
+
+.nc-form-heading p {
+    margin: 0;
+    color: var(--nc-muted);
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.nc-form-divider {
+    height: 1px;
+    margin: 27px 0;
+    background: var(--nc-border);
+}
+
+/* Django form fields */
+
+.nc-report-form p {
+    margin-bottom: 0;
+}
+
+.nc-field-group {
+    margin-bottom: 23px;
+}
+
+.nc-field-label {
+    display: block;
+    margin-bottom: 9px;
+    color: #26382d;
+    font-size: 13px;
+    font-weight: 750;
+}
+
+.nc-required {
+    color: #dc4141;
+}
+
+.nc-field-help {
+    margin: -3px 0 9px;
+    color: var(--nc-muted);
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.nc-report-form input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+.nc-report-form select,
+.nc-report-form textarea {
+    display: block;
+    width: 100%;
+    min-height: 49px;
+    padding: 12px 14px;
+    border: 1px solid #dce5de;
+    border-radius: 11px;
+    outline: none;
+    background-color: #fbfdfb;
+    color: var(--nc-ink);
+    font: inherit;
+    font-size: 14px;
+    transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.nc-report-form textarea {
+    min-height: 135px;
+    resize: vertical;
+}
+
+.nc-report-form input[type="file"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: 1px dashed #b9d4c2;
+    border-radius: 11px;
+    background: #f7fbf8;
+    color: var(--nc-muted);
+    font-size: 13px;
+}
+
+.nc-report-form input[type="checkbox"],
+.nc-report-form input[type="radio"] {
+    accent-color: var(--nc-green);
+}
+
+.nc-report-form input:focus,
+.nc-report-form select:focus,
+.nc-report-form textarea:focus {
+    border-color: var(--nc-green) !important;
+    outline: none;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgb(22 131 74 / 10%);
+}
+
+.nc-report-form input::placeholder,
+.nc-report-form textarea::placeholder {
+    color: #a0ada4;
+}
+
+.nc-field-error-message {
+    margin-top: 8px;
+    color: #c33333;
+    font-size: 12px;
+}
+
+.nc-field-error input,
+.nc-field-error select,
+.nc-field-error textarea {
+    border-color: #dc6262 !important;
+    background: #fffafa !important;
+}
+
+.nc-form-alert {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding: 15px;
+    border: 1px solid #f1d2ce;
+    border-radius: 12px;
+    background: #fff6f5;
+    color: #a72c25;
+}
+
+.nc-form-alert > i {
+    padding-top: 2px;
+    font-size: 19px;
+}
+
+.nc-form-alert strong {
+    font-size: 13px;
+}
+
+.nc-form-alert p {
+    margin: 4px 0 0;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+/* Privacy note and actions */
+
+.nc-privacy-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 28px;
+    padding: 16px;
+    border: 1px solid #dcefe2;
+    border-radius: 12px;
+    background: #f3faf5;
+}
+
+.nc-privacy-note > i {
+    color: var(--nc-green);
+    font-size: 22px;
+}
+
+.nc-privacy-note p {
+    margin: 0;
+    color: #637268;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.nc-privacy-note strong {
+    display: block;
+    margin-bottom: 3px;
+    color: #234b32;
+    font-size: 13px;
+}
+
+.nc-form-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 27px;
+}
+
+.nc-cancel-btn,
+.nc-submit-btn {
+    display: inline-flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 20px;
+    border-radius: 11px;
+    font-size: 13px;
+    font-weight: 750;
+    text-decoration: none;
+    transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+}
+
+.nc-cancel-btn {
+    border: 1px solid #dce5de;
+    background: #fff;
+    color: #48564d;
+}
+
+.nc-cancel-btn:hover {
+    border-color: #b6c9bb;
+    background: #f7faf8;
+    color: var(--nc-ink);
+}
+
+.nc-submit-btn {
+    border: 1px solid var(--nc-green);
+    background: var(--nc-green);
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 5px 12px rgb(22 131 74 / 15%);
+}
+
+.nc-submit-btn:hover {
+    transform: translateY(-2px);
+    background: var(--nc-green-dark);
+    box-shadow: 0 8px 18px rgb(22 131 74 / 22%);
+}
+
+/* Sidebar */
+
+.nc-report-sidebar {
+    display: grid;
+    gap: 20px;
+}
+
+.nc-sidebar-card {
+    padding: 25px;
+}
+
+.nc-sidebar-icon,
+.nc-community-icon {
+    display: grid;
+    width: 47px;
+    height: 47px;
+    place-items: center;
+    margin-bottom: 17px;
+    border-radius: 14px;
+    background: var(--nc-green-light);
+    color: var(--nc-green);
+    font-size: 22px;
+}
+
+.nc-sidebar-card h3 {
+    margin: 0 0 10px;
+    color: var(--nc-ink);
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -.3px;
+}
+
+.nc-sidebar-description,
+.nc-community-card > p {
+    margin: 0;
+    color: var(--nc-muted);
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+.nc-guideline {
+    display: flex;
+    gap: 13px;
+    margin-top: 23px;
+}
+
+.nc-guideline-number {
+    display: grid;
+    flex: 0 0 35px;
+    width: 35px;
+    height: 35px;
+    place-items: center;
+    border: 1px solid #d9ecdf;
+    border-radius: 10px;
+    background: #f4faf6;
+    color: var(--nc-green);
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.nc-guideline strong {
+    display: block;
+    margin-bottom: 4px;
+    color: #293b30;
+    font-size: 12px;
+}
+
+.nc-guideline p {
+    margin: 0;
+    color: var(--nc-muted);
+    font-size: 11px;
+    line-height: 1.7;
+}
+
+.nc-community-card {
+    border-color: #d7eadc;
+    background: linear-gradient(145deg, #f5fbf6, #fff);
+}
+
+.nc-community-icon {
+    background: #dff3e5;
+}
+
+.nc-community-card h3 {
+    font-size: 20px;
+    line-height: 1.4;
+}
+
+.nc-community-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    color: var(--nc-green-dark);
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.nc-community-link:hover {
+    gap: 12px;
+    color: var(--nc-green);
+}
+
+/* Responsive */
+
+@media (max-width: 991px) {
+    .nc-report-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .nc-report-sidebar {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .nc-report-hero {
+        padding: 38px;
+    }
+
+    .nc-hero-decoration {
+        flex-basis: 170px;
+        transform: scale(.85);
+    }
+
+    .nc-floating-card {
+        right: -24px;
+    }
+}
+
+@media (max-width: 600px) {
+    .nc-report-page {
+        padding: 22px 14px 45px;
+    }
+
+    .nc-report-hero {
+        min-height: auto;
+        padding: 30px 23px;
+        border-radius: 19px;
+    }
+
+    .nc-report-hero h1 {
+        font-size: 34px;
+        letter-spacing: -1px;
+    }
+
+    .nc-report-hero-content > p {
+        font-size: 13px;
+    }
+
+    .nc-report-benefits {
+        display: grid;
+        gap: 10px;
+    }
+
+    .nc-hero-decoration {
+        display: none;
+    }
+
+    .nc-form-card {
+        padding: 23px 18px;
+        border-radius: 16px;
+    }
+
+    .nc-form-heading {
+        gap: 12px;
+    }
+
+    .nc-form-heading-icon {
+        flex-basis: 43px;
+        width: 43px;
+        height: 43px;
+        font-size: 21px;
+    }
+
+    .nc-form-heading h2 {
+        font-size: 20px;
+    }
+
+    .nc-form-heading p {
+        font-size: 12px;
+    }
+
+    .nc-report-sidebar {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .nc-form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .nc-cancel-btn,
+    .nc-submit-btn {
+        width: 100%;
+    }
+}
+</style>
+{% endblock %}

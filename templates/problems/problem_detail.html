@@ -1,0 +1,229 @@
+
+{% extends 'base.html' %}
+
+{% block title %}{{ problem.title }} | NaaduCare{% endblock %}
+
+{% block content %}
+<div class="nd-page">
+
+    <!-- Back navigation -->
+    <a href="{% url 'problem_list' %}" class="nd-back-link">
+        <span>←</span> Back to community reports
+    </a>
+
+    <!-- Problem details -->
+    <article class="nd-problem-card">
+
+        {% if problem.photo %}
+            <div class="nd-photo-wrap">
+                <img src="{{ problem.photo.url }}"
+                     class="nd-problem-photo"
+                     alt="{{ problem.title }}">
+                <span class="nd-photo-label">COMMUNITY REPORT</span>
+            </div>
+        {% else %}
+            <div class="nd-photo-placeholder">
+                <div class="nd-placeholder-icon">⌖</div>
+                <span>COMMUNITY REPORT</span>
+                <p>An issue reported by your community</p>
+            </div>
+        {% endif %}
+
+        <div class="nd-problem-content">
+
+            <div class="nd-badge-row">
+                <span class="nd-category-badge">
+                    {{ problem.get_category_display }}
+                </span>
+
+                <span class="nd-status-badge
+                    {% if problem.status == 'Resolved' %}
+                        nd-status-resolved
+                    {% elif problem.status == 'In Progress' %}
+                        nd-status-progress
+                    {% else %}
+                        nd-status-reported
+                    {% endif %}">
+                    <span class="nd-status-dot"></span>
+                    {{ problem.get_status_display }}
+                </span>
+            </div>
+
+            <h1 class="nd-problem-title">{{ problem.title }}</h1>
+
+            <div class="nd-location-line">
+                <span class="nd-location-icon">⌖</span>
+                <span>{{ problem.district }} · {{ problem.location }}</span>
+            </div>
+
+            <div class="nd-divider"></div>
+
+            <section class="nd-description-section">
+                <h2>About this issue</h2>
+                <p>{{ problem.description|linebreaksbr }}</p>
+            </section>
+
+            <div class="nd-report-info">
+                <div class="nd-info-item">
+                    <span class="nd-info-icon">♙</span>
+                    <div>
+                        <span class="nd-info-label">Reported by</span>
+                        <strong>{{ problem.user.username }}</strong>
+                    </div>
+                </div>
+
+                <div class="nd-info-item">
+                    <span class="nd-info-icon">▦</span>
+                    <div>
+                        <span class="nd-info-label">Reported on</span>
+                        <strong>{{ problem.created_at|date:"d M Y, h:i A" }}</strong>
+                    </div>
+                </div>
+
+                <div class="nd-info-item">
+                    <span class="nd-info-icon">✓</span>
+                    <div>
+                        <span class="nd-info-label">Current status</span>
+                        <strong>{{ problem.get_status_display }}</strong>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </article>
+
+    <!-- Community solutions -->
+    <section class="nd-solutions-section">
+
+        <div class="nd-section-heading">
+            <div class="nd-section-icon">✦</div>
+            <div>
+                <span class="nd-section-eyebrow">WORKING TOGETHER</span>
+                <h2>Community solutions</h2>
+                <p>Share practical ideas and support suggestions that can make a difference.</p>
+            </div>
+        </div>
+
+        <div class="nd-solutions-list">
+            {% for solution in solutions %}
+                <article class="nd-solution-card">
+
+                    <div class="nd-solution-top">
+                        <div class="nd-solution-avatar">
+                            {{ solution.user.username|first|upper }}
+                        </div>
+
+                        <div class="nd-solution-author">
+                            <strong>{{ solution.user.username }}</strong>
+                            <span>Community suggestion · {{ solution.created_at|date:"d M Y" }}</span>
+                        </div>
+
+                        <span class="nd-solution-number">
+                            #{{ forloop.counter }}
+                        </span>
+                    </div>
+
+                    <div class="nd-solution-description">
+                        {{ solution.description|linebreaksbr }}
+                    </div>
+
+                    <div class="nd-solution-footer">
+                        <div class="nd-vote-count">
+                            <span>♡</span>
+                            <strong>{{ solution.vote_count }}</strong>
+                            <span>vote{{ solution.vote_count|pluralize }}</span>
+                        </div>
+
+                        {% if user.is_authenticated %}
+                            <form method="post"
+                                  action="{% url 'vote_solution' solution.pk %}">
+                                {% csrf_token %}
+
+                                <button type="submit" class="nd-vote-button
+                                    {% if solution.pk in user_voted_ids %}
+                                        nd-voted
+                                    {% endif %}">
+                                    {% if solution.pk in user_voted_ids %}
+                                        ✓ Supported
+                                    {% else %}
+                                        ♡ Support solution
+                                    {% endif %}
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+
+                </article>
+            {% empty %}
+                <div class="nd-empty-solutions">
+                    <div class="nd-empty-symbol">✦</div>
+                    <h3>Be the first to share an idea</h3>
+                    <p>No community solutions have been submitted yet. Your suggestion could be the first step towards change.</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Add solution -->
+        <div class="nd-add-solution">
+
+            {% if user.is_authenticated %}
+                <div class="nd-add-heading">
+                    <span class="nd-add-icon">＋</span>
+                    <div>
+                        <h3>Have an idea?</h3>
+                        <p>Share a practical solution with your community.</p>
+                    </div>
+                </div>
+
+                <form method="post"
+                      action="{% url 'add_solution' problem.pk %}"
+                      class="nd-solution-form">
+                    {% csrf_token %}
+
+                    {% if solution_form.non_field_errors %}
+                        <div class="nd-form-errors">
+                            {{ solution_form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    {% for field in solution_form %}
+                        <div class="nd-form-field">
+                            <label for="{{ field.id_for_label }}">
+                                {{ field.label }}
+                            </label>
+
+                            {{ field }}
+
+                            {% if field.help_text %}
+                                <small>{{ field.help_text }}</small>
+                            {% endif %}
+
+                            {% for error in field.errors %}
+                                <span class="nd-field-error">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+
+                    <button type="submit" class="nd-submit-button">
+                        Submit your solution <span>→</span>
+                    </button>
+                </form>
+            {% else %}
+                <div class="nd-login-prompt">
+                    <div class="nd-add-icon">♙</div>
+                    <div>
+                        <h3>Your idea matters.</h3>
+                        <p>Log in to suggest solutions and support community ideas.</p>
+                        <a href="{% url 'login' %}" class="nd-login-button">
+                            Log in to participate →
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+
+    </section>
+
+</div>
+{% endblock %}
