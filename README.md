@@ -2,6 +2,9 @@
 
 **NaduCare** is a web-based community platform designed to help people report local problems in Kerala, track their progress, and contribute to improving their neighborhoods. It connects citizens and administrators through a simple and transparent problem-reporting system.
 
+##  Demo link
+https://naducare.onrender.com/
+
 ##  Features
 
 - **Report Local Problems:** Submit issues such as road potholes, damaged streetlights, waste accumulation, drainage blockages, and water supply problems.
